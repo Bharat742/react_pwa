@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import Testimonial from "./components/Testimonial";
+import Users from "./components/Users";
 import './navbar.css';
 function App() {
   return (
@@ -16,9 +17,10 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/testimonial" element={<Testimonial />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/users" element={<Users />} />
       </Routes>
     </Router>
   );
 }
-
+// api : https://randomuser.me/api/?page=1&results=1&seed=abc
 export default App;
