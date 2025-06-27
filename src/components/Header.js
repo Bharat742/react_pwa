@@ -1,7 +1,7 @@
 // src/Components/Header.js
 import React from "react";
 import { NavLink } from "react-router-dom";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -10,6 +10,7 @@ const Header = () => {
       <NavLink to="/about" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>About</NavLink>
       <NavLink to="/testimonial" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Testimonial</NavLink> 
       <NavLink to="/contact" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Contact</NavLink>
+      <NavLink to="/users" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Users</NavLink>
     </nav>
   );
 };
