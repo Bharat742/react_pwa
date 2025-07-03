@@ -1,6 +1,7 @@
-// src/Components/Users.js
+// src/Components/Users.js 
 
 import React, { useEffect, useState } from "react";
+import { Table, Container } from "react-bootstrap";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -32,13 +33,15 @@ const Users = () => {
         <div>
             {
                 mode === 'Offline'?
-                <div>You'r in Offline mode</div> :
+                <div className ="alert alert-warning" role="alert"> You'r in Offline mode! </div> :
                 null
             }
         </div>
-      <h1>User List</h1>
-      <table border="1" cellPadding="10" cellSpacing="0">
-        <thead>
+      {/* <h1>User List</h1> */}
+       <Container className="mt-5">
+      <h2 className="mb-4">User List</h2>
+      <Table striped bordered hover responsive>
+        <thead className="table-dark">
           <tr>
             <th>Name</th>
             <th>Username</th>
@@ -57,7 +60,11 @@ const Users = () => {
               <td>{user.email}</td>
               <td>{user.phone}</td>
               <td>
-                <a href={`http://${user.website}`} target="_blank" rel="noreferrer">
+                <a
+                  href={`http://${user.website}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {user.website}
                 </a>
               </td>
@@ -66,7 +73,8 @@ const Users = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
+    </Container>
     </div>
   );
 };
