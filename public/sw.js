@@ -14,7 +14,13 @@ self.addEventListener("install", (event) => {
         '/static/js/bundle.js',
         '/static/js/main.chunk.js',
         '/static/js/0.chunk.js',
-      ]);
+      ])
+      .catch((error) => {
+        console.error('Cache addAll failed:', error);
+        // You might want to handle the error more gracefully,
+        // potentially skipping caching of the failed resource
+        // or marking the installation as failed.
+      });
     })
   );
    
