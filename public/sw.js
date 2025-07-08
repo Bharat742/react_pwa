@@ -5,40 +5,19 @@ let cacheName = "appV1";
 self.addEventListener("install", (event) => {
   console.warn("Service Worker: Install event");
 
-  // event.waitUntil(
-  //   caches.open(cacheName).then((cache) => {
-  //     return cache.addAll([
-  //       '/',
-  //       '/index.html',
-  //       '/users',
-  //       '/static/js/bundle.js',
-  //       '/static/js/main.chunk.js',
-  //       '/static/js/0.chunk.js',
-  //     ]);
-  //   })
-  // );
   event.waitUntil(
-  caches.open(cacheName).then(async (cache) => {
-    const filesToCache = [
-      '/',
-      '/index.html',
-      '/users',
-      '/static/js/bundle.js',
-      '/static/js/main.chunk.js',
-      '/static/js/0.chunk.js',
-    ];
-
-    await Promise.all(
-      filesToCache.map(async (url) => {
-        try {
-          await cache.add(url);
-        } catch (e) {
-          console.warn(`Failed to cache ${url}:`, e);
-        }
-      })
-    );
-  })
-);
+    caches.open(cacheName).then((cache) => {
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/users',
+        '/static/js/bundle.js',
+        '/static/js/main.chunk.js',
+        '/static/js/0.chunk.js',
+      ]);
+    })
+  );
+   
 
 });
 
