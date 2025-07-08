@@ -2,43 +2,56 @@ export default function swDev() {
   const swUrl = `${process.env.PUBLIC_URL}/sw.js`;
 
   if ('serviceWorker' in navigator && 'PushManager' in window) {
-    navigator.serviceWorker.register(swUrl)
-      .then((registration) => {
-        console.warn(" Service Worker Registered:", registration);
+    navigator.serviceWorker.register(swUrl).then(async (registration) => {
+      console.warn("Service Worker Registered:", registration);
 
-        // Unsubscribe any existing push subscription first
-        registration.pushManager.getSubscription().then((existingSubscription) => {
-          if (existingSubscription) {
-            console.log(" Unsubscribing old push subscription...");
-            existingSubscription.unsubscribe();
-          }
-
-          // Now ask for permission and create a new subscription
-          Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
-              const publicVapidKey = 'BGuH-BZdpShuJMHisDaOvZCQgiKiON4PvjINGmKtxkB6xOPESoCHxd7MmcKiyVtYrfOGepMu3wnhN2CDTa26YwE';
-
-              registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
-              }).then((subscription) => {
-                console.log("Push Subscription:", subscription);
-
-                // Send it to your server
-                fetch('https://service-worker-backend-h4qr.onrender.com/subscribe', {
-                  method: 'POST',
-                  body: JSON.stringify(subscription),
-                  headers: { 'Content-Type': 'application/json' }
-                });
-              }).catch((err) => {
-                console.error("Push subscription failed:", err);
-              });
-            } else {
-              console.warn(" Notification permission denied.");
-            }
+      // 🔁 Wait until the service worker is active
+      if (registration.installing) {
+        await new Promise((resolve) => {
+          registration.installing.addEventListener("statechange", function (e) {
+            if (e.target.state === "activated") resolve();
           });
         });
-      });
+      } else if (registration.waiting) {
+        await new Promise((resolve) => {
+          registration.waiting.addEventListener("statechange", function (e) {
+            if (e.target.state === "activated") resolve();
+          });
+        });
+      } else if (registration.active) {
+        // already active, proceed
+      }
+
+      // 💥 At this point, the service worker is active
+
+      const existingSubscription = await registration.pushManager.getSubscription();
+      if (existingSubscription) {
+        console.log("Unsubscribing old push subscription...");
+        await existingSubscription.unsubscribe();
+      }
+
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        const publicVapidKey = 'BGuH-BZdpShuJMHisDaOvZCQgiKiON4PvjINGmKtxkB6xOPESoCHxd7MmcKiyVtYrfOGepMu3wnhN2CDTa26YwE';
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+        });
+
+        console.log("Push Subscription:", subscription);
+
+        // Send to server
+        await fetch('https://service-worker-backend-h4qr.onrender.com/subscribe', {
+          method: 'POST',
+          body: JSON.stringify(subscription),
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } else {
+        console.warn("Notification permission denied.");
+      }
+    }).catch((err) => {
+      console.error("Service Worker registration failed:", err);
+    });
   }
 }
 
