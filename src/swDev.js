@@ -25,7 +25,7 @@ export default function swDev() {
                 console.log("Push Subscription:", subscription);
 
                 // Send it to your server
-                fetch('https://service-worker-backend-h4qr.onrender.com/subscribe', {
+                fetch('https://service-worker-backend-h4qr.onrender.com', {
                   method: 'POST',
                   body: JSON.stringify(subscription),
                   headers: { 'Content-Type': 'application/json' }
