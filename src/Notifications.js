@@ -7,14 +7,16 @@ import swDev from "./swDev";
 const Notifications = () => {
   const [messageFromSW, setMessageFromSW] = useState("");
 
-  // Listen for service worker messages
+  // ✅ Correctly using useEffect inside the component
   useEffect(() => {
+    swDev(); // Register service worker and push on mount
+
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("message", (event) => {
-        console.log(" Message from SW:", event.data);
+        console.log("Message from SW:", event.data);
 
-        if (event.e === "NOTIFICATION_CLICKED") {
-          setMessageFromSW(event.data.message); // Show on screen
+        if (event.data?.type === "NOTIFICATION_CLICKED") {
+          setMessageFromSW(event.data.message);
         }
       });
     }
@@ -38,12 +40,13 @@ const Notifications = () => {
   };
 
   return (
-    <div className="">
+    <div>
       <button className="btn btn-primary" onClick={askNotificationPermission}>
         Enable Notifications
       </button>
-        {/* Add ToastContainer to render toasts */}
+
       <ToastContainer position="top-center" />
+
       {messageFromSW && (
         <div style={{ marginTop: "20px", color: "green", fontWeight: "bold" }}>
           {messageFromSW}
