@@ -15,7 +15,7 @@ export async function registerPush(swReg, publicVapidKey) {
 
     // 🔥 Send subscription to backend
     // await fetch('https://service-worker-backend-h4qr.onrender.com/subscribe', {
-    await fetch('http://localhost:5000/subscribe', {
+    await fetch('https://service-worker-b.onrender.com/subscribe', {
       method: 'POST',
       body: JSON.stringify(subscription),
       headers: { 'Content-Type': 'application/json' }
