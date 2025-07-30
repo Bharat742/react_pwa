@@ -2,7 +2,7 @@ export async function registerPush(swReg, publicVapidKey) {
   try {
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
-      console.warn('Notification permission denied');
+      console.warn('❌ Notification permission denied');
       return;
     }
 
@@ -11,10 +11,18 @@ export async function registerPush(swReg, publicVapidKey) {
       applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
     });
 
-    console.log('Push Subscription:', JSON.stringify(subscription));
-    // Send subscription to server here
+    console.log('✅ Push Subscription:', JSON.stringify(subscription));
+
+    // 🔥 Send subscription to backend
+    // await fetch('https://service-worker-backend-h4qr.onrender.com/subscribe', {
+    await fetch('http://localhost:5000/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(subscription),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
   } catch (err) {
-    console.error('Push subscription failed:', err);
+    console.error('❌ Push subscription failed:', err);
   }
 }
 
