@@ -4,6 +4,8 @@ import React from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import image from "@/../../public/logo192.png";
 import Notifications from "../Notifications";
+import PushNotificationButton from "./PushNotificationButton";
+
 
 const Home = () => {
   return (
@@ -20,6 +22,8 @@ const Home = () => {
           </Button> */}
           <div  className="d-flex gap-2">
           <Notifications/>
+            <PushNotificationButton/>
+
           <Button variant="outline-light" className="bg-dark">
             Contact Us
           </Button>
