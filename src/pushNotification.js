@@ -20,7 +20,7 @@ export async function registerPush(swReg, publicVapidKey) {
 
     // Send subscription to backend
     console.log('📤 Sending subscription to backend...');
-    const response = await fetch('https://pwa-react-single-page.netlify.app/subscribe', {
+    const response = await fetch('https://service-worker-b.onrender.com/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(subscription)
