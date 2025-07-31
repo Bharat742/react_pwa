@@ -14,19 +14,10 @@ self.addEventListener("install", (event) => {
         '/static/js/bundle.js',
         '/static/js/main.chunk.js',
         '/static/js/0.chunk.js',
-      ])
-      .catch((error) => {
-        console.error('Cache addAll failed:', error);
-        // You might want to handle the error more gracefully,
-        // potentially skipping caching of the failed resource
-        // or marking the installation as failed.
-      });
+      ]);
     })
   );
-   
-
 });
-
 
 self.addEventListener("fetch", (event) => {
   if (!navigator.onLine) {
@@ -37,18 +28,15 @@ self.addEventListener("fetch", (event) => {
         }
         let requestUrl = event.request.clone();
         fetch(requestUrl)
-
       })
     );
   }
-
 });
-
-// ####################
 
 // Push Notification Event
 self.addEventListener("push", (event) => {
   console.warn("Service Worker: Push Received");
+  console.log("📨 Push data:", event.data ? event.data.text() : "No data");
 
   let title = "Push Notification";
   let options = {
@@ -57,18 +45,30 @@ self.addEventListener("push", (event) => {
     badge: "/logo192.png",
     data: {
       url: "/"
-    }
+    },
+    requireInteraction: true, // Keep notification visible until user interacts
+    actions: [
+      {
+        action: 'open',
+        title: 'Open App'
+      },
+      {
+        action: 'close',
+        title: 'Close'
+      }
+    ]
   };
 
   if (event.data) {
     try {
-      const data = event.data.json(); //  Try parsing JSON
+      const data = event.data.json(); // Try parsing JSON
       title = data.title || title;
       options.body = data.body || options.body;
       options.data.url = data.url || "/";
+      console.log("✅ Parsed push data:", data);
     } catch (e) {
-      console.warn("Fallback to text body:", e);
-      options.body = event.data.text(); //  Plain text fallback
+      console.warn("⚠️ Fallback to text body:", e);
+      options.body = event.data.text(); // Plain text fallback
     }
   }
 
@@ -77,30 +77,26 @@ self.addEventListener("push", (event) => {
   );
 });
 
-
-
 // Notification Click Event
 self.addEventListener("notificationclick", function (event) {
-  console.warn(" Notification Clicked");
+  console.warn("🔔 Notification Clicked");
+  console.log("Action clicked:", event.action);
+  
   event.notification.close();
 
-  const message = " This message was pushed by the Service Worker";
+  if (event.action === 'close') {
+    return;
+  }
+
+  const message = "This message was pushed by the Service Worker";
 
   event.waitUntil(
     clients.openWindow(event.notification.data.url)
-    // clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
-    //   if (clientList.length > 0) {
-    //     // Send a message to your frontend
-    //     clientList[0].postMessage({
-    //       type: "NOTIFICATION_CLICKED",
-    //       message: message,
-    //       from: "service-worker"
-    //     });
-    //     return clientList[0].focus();
-    //   } else {
-    //     return clients.openWindow("/");
-    //   }
-    // })
   );
+});
+
+// Notification Close Event
+self.addEventListener("notificationclose", function (event) {
+  console.warn("🔕 Notification Closed");
 });
 
