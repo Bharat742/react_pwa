@@ -1,25 +1,37 @@
 export async function registerPush(swReg, publicVapidKey) {
   try {
+    console.log('🔐 Requesting notification permission...');
     const permission = await Notification.requestPermission();
+    
     if (permission !== 'granted') {
       console.warn('❌ Notification permission denied');
       return;
     }
+
+    console.log('✅ Notification permission granted');
+    console.log('📱 Registering push subscription...');
 
     const subscription = await swReg.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
     });
 
-    console.log('✅ Push Subscription:', JSON.stringify(subscription));
+    console.log('✅ Push Subscription created:', JSON.stringify(subscription));
 
-    // 🔥 Send subscription to backend
-    // await fetch('https://service-worker-backend-h4qr.onrender.com/subscribe', {
-    await fetch('https://service-worker-b.onrender.com/subscribe', {
+    // Send subscription to backend
+    console.log('📤 Sending subscription to backend...');
+    const response = await fetch('https://pwa-react-single-page.netlify.app/subscribe', {
       method: 'POST',
-      body: JSON.stringify(subscription),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(subscription)
     });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log('✅ Subscription saved to backend:', result);
+    } else {
+      console.error('❌ Failed to save subscription to backend');
+    }
 
   } catch (err) {
     console.error('❌ Push subscription failed:', err);
