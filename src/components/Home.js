@@ -12,7 +12,7 @@ const Home = () => {
   const sendNotificationToAll = async () => {
     try {
       setNotificationStatus("Sending notifications...");
-      const response = await fetch('https://pwa-react-single-page.netlify.app/sendNotification', {
+      const response = await fetch('https://service-worker-b.onrender.com/sendNotification', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ const Home = () => {
 
   const checkSubscriptions = async () => {
     try {
-      const response = await fetch('https://pwa-react-single-page.netlify.app/subscribe/list');
+      const response = await fetch('https://service-worker-b.onrender.com/subscribe/list');
       const result = await response.json();
       console.log('Current subscriptions:', result);
       alert(`Found ${result.count} subscriptions`);
