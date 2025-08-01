@@ -19,7 +19,7 @@ const Header = () => {
 
       <Navbar bg="primary" data-bs-theme="dark" expand="lg">
       <Container>
-        <Navbar.Brand as={Link} to="/">Navbar</Navbar.Brand>
+        // <Navbar.Brand as={Link} to="/">Navbar</Navbar.Brand>
 
         {/*  Toggle button for mobile */}
         <Navbar.Toggle aria-controls="main-navbar" />
