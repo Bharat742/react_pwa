@@ -141,7 +141,7 @@ const Home = () => {
           <p>
             This is a simple React app styled with <strong>React-Bootstrap</strong>. It's fully responsive and mobile-friendly.
           </p>
-          <div className="d-flex gap-2 mb-3">
+          <div className="d-flex flex-wrap gap-2 mb-3">
             <Notifications/>
             <PushNotificationButton/>
             <Button 
